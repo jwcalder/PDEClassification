@@ -67,7 +67,7 @@ for epoch in range(epochs):
     data_torch = torch.from_numpy(data).float().to(device)
     target_torch = torch.from_numpy(target).long().to(device)
 
-    #Optimization setp
+    #Optimization step
     optimizer.zero_grad()
     output = model(data_torch)
     loss = F.nll_loss(output, target_torch)
