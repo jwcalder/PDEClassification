@@ -13,7 +13,7 @@ class Net(nn.Module):
     def __init__(self,n,w=(32,64)):
         super(Net, self).__init__()
         m = n>>4
-        self.conv1 = nn.Conv2d(1, w[0], 3, 1,padding=1)
+        self.conv1 = nn.Conv2d(2, w[0], 3, 1,padding=1)
         self.conv2 = nn.Conv2d(w[0], w[1], 3, 1,padding=1)
         self.fc1 = nn.Linear(w[1]*m*m, 128)
         self.fc2 = nn.Linear(128, 2)
@@ -38,7 +38,7 @@ n = 32
 cuda = True   #Use GPU acceleration 
 batch_size = 32
 learning_rate = 1    #Learning rate
-epochs = 2000
+epochs = 10000
 
 use_cuda = cuda and torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
@@ -53,13 +53,11 @@ for epoch in range(epochs):
     #Generate random training data batch
     f = 2*np.random.rand(batch_size,n,n)-1
     u_wave = wave.solve(f)
-    #wave_data = np.stack((u_wave,f),axis=1)
-    wave_data = u_wave[:,None,:,:]
+    wave_data = np.stack((u_wave,f),axis=1)
     wave_labels = np.zeros(batch_size)
 
     u_heat = heat.solve(f)
-    #heat_data = np.stack((u_heat,f),axis=1)
-    heat_data = u_heat[:,None,:,:]
+    heat_data = np.stack((u_heat,f),axis=1)
     heat_labels = np.ones(batch_size)
 
     data = np.vstack((wave_data,heat_data))
