@@ -1,4 +1,32 @@
 import numpy as np
+from scipy import ndimage
+
+def random_source(batch_size,n,sigma=0):
+    """Random source
+    ======
+
+    Generates a batch of random source terms with 
+    Gaussian smoothing
+    
+    Parameters
+    ----------
+    batch_size : int
+        Number of sources to generate.
+    n : int
+        Dimension
+    sigma : float (optional)
+        Standard deviation of Gaussian smoothing. Default sigma=0 is
+        no smoothing.
+
+    Returns
+    -------
+    f : (b,n,n) numpy array, float
+        Random source terms
+    """
+    f = 2*np.random.rand(batch_size,n,n)-1
+    for i in range(batch_size):
+        f[i,:,:] = ndimage.gaussian_filter(f[i,:,:],sigma)
+    return f
 
 class wave_eq_solver:
 

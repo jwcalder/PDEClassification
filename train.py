@@ -7,6 +7,8 @@ from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
 from pde import heat_eq_solver
 from pde import wave_eq_solver
+from pde import random_source
+from scipy import ndimage
 
 
 class Net(nn.Module):
@@ -35,6 +37,7 @@ class Net(nn.Module):
 
 #Training settings
 n = 32
+sigma = 3 #Gaussian smoothing of source terms
 cuda = True   #Use GPU acceleration 
 batch_size = 32
 learning_rate = 1    #Learning rate
@@ -51,7 +54,7 @@ heat = heat_eq_solver(n)
 for epoch in range(epochs):
 
     #Generate random training data batch
-    f = 2*np.random.rand(batch_size,n,n)-1
+    f = random_source(batch_size,n,sigma)
     u_wave = wave.solve(f)
     wave_data = np.stack((u_wave,f),axis=1)
     wave_labels = np.zeros(batch_size)
